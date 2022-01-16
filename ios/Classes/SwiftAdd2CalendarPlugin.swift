@@ -68,7 +68,7 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
 
                 if(emailInvites != nil) {
                     var attendees = [EKParticipant]()
-                    for invitee in emailInvites {
+                    for invitee in emailInvites ?? [] {
                         if let attendee = createParticipant(email: invitee) {
                             attendees.append(attendee)
                         }
