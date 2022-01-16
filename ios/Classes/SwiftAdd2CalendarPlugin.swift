@@ -66,7 +66,7 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
                 event.notes = description
                 event.isAllDay = allDay
 
-                if(emailInvites != null) {
+                if(emailInvites != nil) {
                     var attendees = [EKParticipant]()
                     for invitee in emailInvites {
                         if let attendee = createParticipant(email: invitee) {
