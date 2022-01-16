@@ -46,6 +46,7 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
         let endDate = Date(milliseconds: (args["endDate"] as! Double))
         let alarmInterval = args["alarmInterval"] as? Double
         let allDay = args["allDay"] as! Bool
+        let emailInvites = args["emailInvites"] is NSNull ? nil: args["emailInvites"] as! [String]
         
         let eventStore = EKEventStore()
         
@@ -64,6 +65,16 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
                 event.location = location
                 event.notes = description
                 event.isAllDay = allDay
+
+                if(emailInvites != null) {
+                    var attendees = [EKParticipant]()
+                    for invitee in emailInvites {
+                        if let attendee = createParticipant(email: invitee) {
+                            attendees.append(attendee)
+                        }
+                    }
+                    event.setValue(attendees, forKey: "attendees")
+                }
                 
                 if let recurrence = args["recurrence"] as? [String:Any]{
                     let interval = recurrence["interval"] as! Int
@@ -84,6 +95,16 @@ public class SwiftAdd2CalendarPlugin: NSObject, FlutterPlugin {
                 completion?(false)
             }
         })
+    }
+
+    private func createParticipant(email email: String) -> EKParticipant? {
+        let clazz: AnyClass? = NSClassFromString("EKAttendee")
+        if let type = clazz as? NSObject.Type {
+            let attendee = type.init()
+            attendee.setValue(email, forKey: "emailAddress")
+            return attendee as? EKParticipant
+        }
+        return nil
     }
 
     private func getAuthorizationStatus() -> EKAuthorizationStatus {

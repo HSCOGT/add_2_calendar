@@ -40,6 +40,7 @@ class Event {
 
     if (Platform.isIOS) {
       params['alarmInterval'] = iosParams.reminder?.inSeconds.toDouble();
+      params['emailInvites'] = iosParams.emailInvites;
     } else {
       params['invites'] = androidParams.emailInvites?.join(",");
     }
@@ -57,5 +58,7 @@ class AndroidParams {
 class IOSParams {
   //In iOS, you can set alert notification with duration. Ex. Duration(minutes:30) -> After30 min.
   final Duration? reminder;
-  const IOSParams({this.reminder});
+  final List<String>? emailInvites;
+
+  const IOSParams({this.reminder, this.emailInvites});
 }
